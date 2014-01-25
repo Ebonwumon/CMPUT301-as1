@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="74dp"
-        android:text="No counter"
+        android:text="@string/no_counter"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
@@ -24,6 +24,36 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Increment" />
+        android:text="@string/increment_action" />
+
+    <TextView
+        android:id="@+id/counter_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/increment"
+        android:layout_alignRight="@+id/counter_name"
+        android:layout_marginBottom="21dp"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/prev_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="27dp"
+        android:layout_toLeftOf="@+id/increment"
+        android:onClick="prev"
+        android:text="@string/prev_action" />
+
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/prev_button"
+        android:layout_alignBottom="@+id/prev_button"
+        android:layout_toRightOf="@+id/counter_count"
+        android:onClick="next"
+        android:text="@string/next_action" />
 
 </RelativeLayout>

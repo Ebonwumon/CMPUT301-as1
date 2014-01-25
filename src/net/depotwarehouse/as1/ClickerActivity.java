@@ -1,43 +1,120 @@
 package net.depotwarehouse.as1;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import net.depotwarehouse.as1.controller.ClickerController;
 import net.depotwarehouse.as1.model.Clicker;
+import net.depotwarehouse.as1.model.File;
 
 public class ClickerActivity extends Activity {
 	
 	public static ClickerController clickerController;
+	private TextView counterName;
+	private TextView count;
+	private Button incButton;
+	private Button nextButton;
+	private Button prevButton;
 	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_clicker);
-		clickerController = new ClickerController(loadFromFile("clickers.json"));
 		
-		TextView counterName = (TextView) findViewById(R.id.counter_name);
-		Button incButton = (Button) findViewById(R.id.increment);
-		if (clickerController.any()) {
-			Clicker clicker = clickerController.current();
-			counterName.setText(clicker.getName());
-		}
+		// instantiation of active view items
+		counterName = (TextView) findViewById(R.id.counter_name);
+		count = (TextView) findViewById(R.id.counter_count);
+		incButton = (Button) findViewById(R.id.increment);
+		nextButton = (Button) findViewById(R.id.next_button);
+		prevButton = (Button) findViewById(R.id.prev_button);
 		
+		incButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View v) {
+				increment();
+			}
+		});
 	}
 	
+	/**
+	 * OnResume we will completely reload the controller from disk.
+	 * This helps in the case where we just came from the newclicker activity,
+	 * and added a new clicker serialized to disk.
+	 */
 	protected void onResume() {
 		super.onResume();
+		String loadedData = "";
+		try {
+			loadedData = File.readString(openFileInput("clickers.json"));
+		} catch (IOException e) {
+			System.err.println("error loading from file");
+		}
+		clickerController = new ClickerController(loadedData);
+		
+		refreshClicker();
+	}
+	
+	/**
+	 * refreshClicker() refreshes the view to reflect most up-to-date clicker data.
+	 * Must be called after clickercontroller is initialized.
+	 */
+	public void refreshClicker() {
+		if (clickerController.any()) {
+			counterName.setText(clickerController.current().getName());
+			count.setText(String.valueOf(clickerController.current().getCount()));
+			incButton.setEnabled(true);
+		} else {
+			counterName.setText("No Counters");
+			count.setText("");
+			incButton.setEnabled(false);
+		}
+		
+		// We can only navigate between clickers if there are more of them
+		nextButton.setEnabled(clickerController.hasNext());
+		prevButton.setEnabled(clickerController.hasPrevious());
 	}
 
+	public void increment() {
+		/* if we don't have anything in the clickercontroller, attempting to increment would be
+		 * at best wasteful, and at worst, application-breaking
+		 */
+		if (clickerController.any()) {
+			clickerController.current().increment();
+			try {
+				// We need to commit immediately
+				File.writeString(openFileOutput("clickers.json", MODE_PRIVATE), clickerController.toJSON());
+			} catch (FileNotFoundException e) {
+				System.err.println("error writing file - clicker not saved");
+			}
+			refreshClicker();
+		}
+	}
+	
+	public void next(View v) {
+		try {
+			clickerController.next();
+			refreshClicker();
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("Next Clicker out of bounds: " + e);
+		}
+	}
+	
+	public void prev(View v) {
+		try {
+			clickerController.prev();
+			refreshClicker();
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("Prev Clicker out of bounds: " + e);
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -45,42 +122,22 @@ public class ClickerActivity extends Activity {
 		return true;
 	}
 	
-	private String loadFromFile(String filename) {
-		FileInputStream fin;
-		String ret = "";
-		
-		try {
-			fin = openFileInput(filename);
-			
-			if ( fin != null ) {
-	            InputStreamReader inputStreamReader = new InputStreamReader(fin);
-	            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-	            String receiveString = "";
-	            StringBuilder stringBuilder = new StringBuilder();
-
-	            while ( (receiveString = bufferedReader.readLine()) != null ) {
-	                stringBuilder.append(receiveString);
-	            }
-
-	            fin.close();
-	            ret = stringBuilder.toString();
-			}
-		} catch (Exception e) {
-			System.err.println("error reading from file");
-		}
-		return ret;
-	}
-	
-	private boolean saveToStorage() {
-		FileOutputStream fout;
-		
-		try {
-			fout = openFileOutput("clickers.json", Context.MODE_PRIVATE);
-			fout.write(new Clicker("Bob", 9).toJSON().getBytes());
-		} catch (Exception e) {
-			System.err.println("Error writing file");
-		}
-		return true;
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle presses on the action bar items
+		Intent intent;
+	    switch (item.getItemId()) {
+	        case R.id.new_counter:
+	        	intent = new Intent(this, NewClickerActivity.class);
+	        	startActivity(intent);
+	            return true;
+	        case R.id.edit_counter:
+	        	intent = new Intent(this, EditClickerActivity.class);
+	        	intent.putExtra("id", clickerController.current().getId());
+	        	startActivity(intent);
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 
 }

@@ -27,6 +27,10 @@
             android:name="net.depotwarehouse.as1.NewClickerActivity"
             android:label="@string/title_activity_new_clicker" >
         </activity>
+        <activity
+            android:name="net.depotwarehouse.as1.EditClickerActivity"
+            android:label="@string/title_activity_edit_clicker" >
+        </activity>
     </application>
 
 </manifest>
