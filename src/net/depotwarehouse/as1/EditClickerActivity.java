@@ -14,11 +14,12 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class EditClickerActivity extends Activity {
 	
 	private EditText clickerName;
-	private EditText clickerCount;
+	private TextView clickerCount;
 	private Button saveButton;
 	private Button deleteButton;
 	private ClickerController clickerController;
@@ -28,9 +29,10 @@ public class EditClickerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_clicker);
+		setupActionBar();
 		
 		clickerName = (EditText) findViewById(R.id.clicker_name);
-		clickerCount = (EditText) findViewById(R.id.clicker_count);
+		clickerCount = (TextView) findViewById(R.id.clicker_count);
 		
 		Intent intent = getIntent();
 		id = intent.getStringExtra("id");
@@ -66,25 +68,36 @@ public class EditClickerActivity extends Activity {
 		return true;
 	}
 	
-	public void save(View v) {
+	public void zero(View v) {
+		clickerController.current().setCount(0);
+		save();
+	}
+	
+	public void rename(View v) {
 		clickerController.current().setName(clickerName.getText().toString());
-		clickerController.current().setCount(Integer.parseInt(clickerCount.getText().toString()));
-		try {
-			File.writeString(openFileOutput("clickers.json", MODE_PRIVATE), clickerController.toJSON());
-		} catch (FileNotFoundException e) {
-			System.err.println("Could not save clicker edits " + e);
-		}
-		finish();
+		save();
 	}
 	
 	public void delete(View v) {
 		clickerController.remove();
+		save();
+	}
+	
+	public void save() {
 		try {
 			File.writeString(openFileOutput("clickers.json", MODE_PRIVATE), clickerController.toJSON());
 		} catch (FileNotFoundException e) {
-			System.err.println("Could not delete clicker " + e);
+			System.err.println("Could not save clicker edits/removals " + e);
 		}
 		finish();
 	}
+	
+	private void setupActionBar() {
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+	}
+	
+
 
 }

@@ -29,7 +29,27 @@
         </activity>
         <activity
             android:name="net.depotwarehouse.as1.EditClickerActivity"
-            android:label="@string/title_activity_edit_clicker" >
+            android:label="@string/title_activity_edit_clicker"
+            android:parentActivityName="net.depotwarehouse.as1.ClickerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.depotwarehouse.as1.ClickerActivity" />
+        </activity>
+        <activity
+            android:name="net.depotwarehouse.as1.ClickerOverviewActivity"
+            android:label="@string/title_activity_clicker_overview"
+            android:parentActivityName="net.depotwarehouse.as1.ClickerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.depotwarehouse.as1.ClickerActivity" />
+        </activity>
+        <activity
+            android:name="net.depotwarehouse.as1.ClickerStatsActivity"
+            android:label="@string/title_activity_clicker_stats"
+            android:parentActivityName="net.depotwarehouse.as1.ClickerOverviewActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.depotwarehouse.as1.ClickerOverviewActivity" />
         </activity>
     </application>
 

@@ -14,5 +14,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="save_action">Save</string>
     <string name="delete_action">Delete</string>
+    <string name="zero_action">Zero Count</string>
+    <string name="title_activity_clicker_overview">ClickerOverviewActivity</string>
+    <string name="title_activity_clicker_stats">ClickerStatsActivity</string>
 
 </resources>

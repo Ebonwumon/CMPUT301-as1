@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class Clicker {
+public class Clicker implements Comparable {
 	
 	private int Count;
 	private String Name;
@@ -64,6 +64,16 @@ public class Clicker {
 		Type typeOfT = new TypeToken<ArrayList<Clicker>>(){}.getType();
 		arr = gson.fromJson(args, typeOfT);
 		return arr;	
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		Clicker c = (Clicker) arg0;
+		return this.Count - c.getCount();
+	}
+	
+	public String toString() {
+		return this.Name + ": " + String.valueOf(this.Count);
 	}
 
 }

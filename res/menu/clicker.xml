@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/new_counter" android:title="New Counter" android:titleCondensed="New"></item>
     <item android:id="@+id/edit_counter" android:titleCondensed="Edit" android:title="Edit Counter"></item>
+    <item android:id="@+id/list_counters" android:title="List Counters" android:titleCondensed="List"></item>
 
 </menu>

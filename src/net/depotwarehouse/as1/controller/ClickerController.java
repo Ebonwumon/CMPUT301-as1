@@ -1,6 +1,7 @@
 package net.depotwarehouse.as1.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.res.Resources.NotFoundException;
 
@@ -61,6 +62,17 @@ public class ClickerController {
 	
 	public void remove() {
 		clickers.remove(current);
+	}
+	
+	public Clicker get(int position) {
+		// TODO, I should probably make sure the user is within bounds
+		return clickers.get(position);
+	}
+	
+	public ArrayList<Clicker> sortByCount() {
+		Collections.sort(clickers);
+		Collections.reverse(clickers);
+		return clickers;
 	}
 	
 	public String toJSON() {

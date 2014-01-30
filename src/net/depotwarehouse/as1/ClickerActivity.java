@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import net.depotwarehouse.as1.controller.ClickerController;
+import net.depotwarehouse.as1.controller.LogController;
 import net.depotwarehouse.as1.model.Clicker;
 import net.depotwarehouse.as1.model.File;
 
 public class ClickerActivity extends Activity {
 	
 	public static ClickerController clickerController;
+	public static LogController logController;
 	private TextView counterName;
 	private TextView count;
 	private Button incButton;
@@ -27,6 +29,15 @@ public class ClickerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_clicker);
+		
+		// We instantiate logController here, because logs will never change, except in this activity.
+		String loadedData = "";
+		try {
+			loadedData = File.readString(openFileInput("logs.json"));
+		} catch (IOException e) {
+			System.err.println("Error loading log file");
+		}
+		logController = new LogController(loadedData);
 		
 		// instantiation of active view items
 		counterName = (TextView) findViewById(R.id.counter_name);
@@ -87,9 +98,11 @@ public class ClickerActivity extends Activity {
 		 */
 		if (clickerController.any()) {
 			clickerController.current().increment();
+			logController.logClick(clickerController.current().getId());
 			try {
 				// We need to commit immediately
 				File.writeString(openFileOutput("clickers.json", MODE_PRIVATE), clickerController.toJSON());
+				File.writeString(openFileOutput("log.json", MODE_PRIVATE), logController.toJSON());
 			} catch (FileNotFoundException e) {
 				System.err.println("error writing file - clicker not saved");
 			}
@@ -134,6 +147,9 @@ public class ClickerActivity extends Activity {
 	        case R.id.edit_counter:
 	        	intent = new Intent(this, EditClickerActivity.class);
 	        	intent.putExtra("id", clickerController.current().getId());
+	        	startActivity(intent);
+	        case R.id.list_counters:
+	        	intent = new Intent(this, ClickerOverviewActivity.class);
 	        	startActivity(intent);
 	        default:
 	            return super.onOptionsItemSelected(item);

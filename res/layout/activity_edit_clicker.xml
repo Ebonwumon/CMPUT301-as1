@@ -21,15 +21,14 @@
         <requestFocus />
     </EditText>
     
-    <EditText
+    <TextView
         android:id="@+id/clicker_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
-        android:ems="10"
-        android:inputType="number" />
+        android:ems="10"/>
 
     <Button
         android:id="@+id/save_button"
@@ -37,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:onClick="save"
+        android:onClick="rename"
         android:text="@string/save_action" />
 
     <Button
@@ -49,5 +48,15 @@
         android:layout_marginBottom="45dp"
         android:onClick="delete"
         android:text="@string/delete_action" />
+
+    <Button
+        android:id="@+id/zero_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/save_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:onClick="zero"
+        android:text="@string/zero_action" />
 
 </RelativeLayout>
