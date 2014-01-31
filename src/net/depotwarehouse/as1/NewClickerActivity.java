@@ -25,6 +25,8 @@ public class NewClickerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_clicker);
+		setupActionBar();
+		
 		String loadedData = "";
 		try {
 			loadedData = File.readString(openFileInput("clickers.json"));
@@ -57,6 +59,12 @@ public class NewClickerActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.new_clicker, menu);
 		return true;
+	}
+	
+	private void setupActionBar() {
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
 	}
 
 }

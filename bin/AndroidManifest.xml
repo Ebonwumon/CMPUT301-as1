@@ -25,7 +25,11 @@
         </activity>
         <activity
             android:name="net.depotwarehouse.as1.NewClickerActivity"
-            android:label="@string/title_activity_new_clicker" >
+            android:label="@string/title_activity_new_clicker"
+            android:parentActivityName="net.depotwarehouse.as1.ClickerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="net.depotwarehouse.as1.ClickerActivity" />
         </activity>
         <activity
             android:name="net.depotwarehouse.as1.EditClickerActivity"
