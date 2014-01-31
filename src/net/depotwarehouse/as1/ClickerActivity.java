@@ -161,6 +161,8 @@ public class ClickerActivity extends Activity {
 	        	startActivity(intent);
 	            return true;
 	        case R.id.edit_counter:
+	        	// If there are no clickers in the controller we have nothing to edit
+	        	if (!clickerController.any()) { return true; }
 	        	intent = new Intent(this, EditClickerActivity.class);
 	        	// We'll need to know which counter to edit
 	        	intent.putExtra("id", clickerController.current().getId());
