@@ -6,12 +6,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * A static class encapsulating File reading behaviour. Not to be confused with java.io.File
+ * this one is namespaced to my package.
+ * @author tpavlek
+ *
+ */
 public class File {
 	
-	// Our streams are static because in the instance where multiple classes
-	// might be instantiated, we do not want to try to open two file handlers
-	
-	
+	/**
+	 * 
+	 * @param inStream FileInputStream pointing to file, created with Activity's openFileInput()
+	 * @return JSON string from disk.
+	 * @throws IOException
+	 */
 	public static String readString(FileInputStream inStream) throws IOException{
 		String ret;
 		try {
@@ -19,18 +27,25 @@ public class File {
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String receiveString = "";
             StringBuilder stringBuilder = new StringBuilder();
-
+            
+            // Iterate through the bufferedReader and append lines.
             while ( (receiveString = bufferedReader.readLine()) != null ) {
                 stringBuilder.append(receiveString);
             }
-            
+            // throw the string representation of the stringbuilder into a return variable
             ret = stringBuilder.toString();
 		} catch (IOException e) {
 			throw e;
 		}
+		// we're done
 		return ret;
 	}
 	
+	/**
+	 * 
+	 * @param outStream FileOutputStream opened by Activity's openFileOutput()
+	 * @param json JSON string to write to disk.
+	 */
 	public static void writeString(FileOutputStream outStream, String json) {
 		try {
 			outStream.write(json.getBytes());

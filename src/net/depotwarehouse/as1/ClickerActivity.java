@@ -165,9 +165,11 @@ public class ClickerActivity extends Activity {
 	        	// We'll need to know which counter to edit
 	        	intent.putExtra("id", clickerController.current().getId());
 	        	startActivity(intent);
+	        	return true;
 	        case R.id.list_counters:
 	        	intent = new Intent(this, ClickerOverviewActivity.class);
 	        	startActivity(intent);
+	        	return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

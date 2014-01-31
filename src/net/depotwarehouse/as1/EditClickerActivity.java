@@ -3,6 +3,7 @@ package net.depotwarehouse.as1;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import net.depotwarehouse.as1.controller.ClickerController;
+import net.depotwarehouse.as1.controller.LogController;
 import net.depotwarehouse.as1.model.File;
 import android.os.Bundle;
 import android.app.Activity;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 public class EditClickerActivity extends Activity {
 	// controllers
 	private ClickerController clickerController;
+	private LogController logController;
 	
 	// widgets
 	private EditText clickerName;
@@ -64,6 +66,14 @@ public class EditClickerActivity extends Activity {
 		}
 		clickerController = new ClickerController(loadedData);
 		
+		loadedData = "";
+		try {
+			loadedData = File.readString(openFileInput("log.json"));
+		} catch (IOException e) {
+			System.err.println("Error loading log file");
+		}
+		logController = new LogController(loadedData);
+		
 		// if the ID was passed wrong, we're in an unsalvageable state. Get out.
 		try {
 			clickerController.findById(id);
@@ -98,8 +108,8 @@ public class EditClickerActivity extends Activity {
 	
 	// delete the counter and save to disk
 	public void delete(View v) {
-		// TODO remove associated logs
 		clickerController.remove();
+		logController.removeAllById(id);
 		save();
 	}
 	
@@ -107,7 +117,7 @@ public class EditClickerActivity extends Activity {
 	public void save() {
 		try {
 			File.writeString(openFileOutput("clickers.json", MODE_PRIVATE), clickerController.toJSON());
-			// todo save log
+			File.writeString(openFileOutput("log.json", MODE_PRIVATE), logController.toJSON());
 		} catch (FileNotFoundException e) {
 			System.err.println("Could not save clicker edits/removals " + e);
 		}
