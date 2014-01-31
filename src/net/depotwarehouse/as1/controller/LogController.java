@@ -14,6 +14,17 @@ public class LogController {
 		logs = Log.LogFactory(json);
 	}
 	
+	public ArrayList<Log> getById(String id) {
+		ArrayList<Log> ret = new ArrayList<Log>();
+		for (Log l : logs) {
+			if (l.getID().equals(id)) {
+				ret.add(l);
+			}
+		}
+		
+		return ret;
+	}
+	
 	public void logClick(String clickerID) {
 		logs.add(new Log(clickerID));
 	}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import net.depotwarehouse.as1.adapter.ClickerListAdapter;
 import net.depotwarehouse.as1.controller.ClickerController;
 import net.depotwarehouse.as1.controller.LogController;
+import net.depotwarehouse.as1.model.AggregateCounts;
 import net.depotwarehouse.as1.model.Clicker;
 import net.depotwarehouse.as1.model.File;
 import android.os.Bundle;
@@ -24,7 +25,6 @@ import android.support.v4.app.NavUtils;
 
 public class ClickerOverviewActivity extends Activity {
 	private ClickerController clickerController;
-	private LogController logController;
 	private ListView list;
 
 	@Override
@@ -47,15 +47,9 @@ public class ClickerOverviewActivity extends Activity {
 		}
 		clickerController = new ClickerController(loadedData);
 		
-		try {
-			loadedData = File.readString(openFileInput("logs.json"));
-		} catch (IOException e) {
-			System.err.println("error loading from file");
-		}
-		
 		list = (ListView) findViewById(R.id.clicker_list);
 		
-		logController = new LogController(loadedData);
+		
 		
 		ClickerListAdapter adapter = new ClickerListAdapter(this, clickerController.sortByCount());
 		list.setAdapter(adapter);
@@ -70,7 +64,7 @@ public class ClickerOverviewActivity extends Activity {
 	
 	public void viewStats(int position) {
 		Intent intent = new Intent(this, ClickerStatsActivity.class);
-		intent.putExtra("counterID", clickerController.get(position).getId());
+		intent.putExtra("id", clickerController.get(position).getId());
 		startActivity(intent);
 	}
 

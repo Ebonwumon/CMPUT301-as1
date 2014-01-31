@@ -16,6 +16,14 @@ public class Log {
 		date = new Date();
 	}
 	
+	public Date getDate() {
+		return this.date;
+	}
+	
+	public String getID() {
+		return this.ClickerID;
+	}
+	
 	
 	public static ArrayList<Log> LogFactory(String args) {
 		ArrayList<Log> arr = new ArrayList<Log>();

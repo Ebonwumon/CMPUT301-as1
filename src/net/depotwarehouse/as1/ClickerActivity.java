@@ -33,7 +33,7 @@ public class ClickerActivity extends Activity {
 		// We instantiate logController here, because logs will never change, except in this activity.
 		String loadedData = "";
 		try {
-			loadedData = File.readString(openFileInput("logs.json"));
+			loadedData = File.readString(openFileInput("log.json"));
 		} catch (IOException e) {
 			System.err.println("Error loading log file");
 		}
