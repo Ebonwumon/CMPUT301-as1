@@ -6,9 +6,9 @@ To launch the application, launch tpavlek_as1 from the launcher. The apk to inst
 The main screen, on first launch should have no clickers and you shouldn't be able to do anything. Use the three-dot menu in the top left for application options.
 
 1. New Counter
-..* Fill in the clicker name by tapping on the EditText field and typing a name
-..* Click Create.
-..* Optionally, click the top left to navigate back to the main activity
+  * Fill in the clicker name by tapping on the EditText field and typing a name
+  * Click Create.
+  * Optionally, click the top left to navigate back to the main activity
 2. Edit Counter
 ..* If you have not created any clickers, this button will do nothing
 ..* Edits the currently-focused counter. If you want to edit a different counter, navigate to it first
