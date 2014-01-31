@@ -2,14 +2,12 @@ package net.depotwarehouse.as1;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import net.depotwarehouse.as1.controller.ClickerController;
 import net.depotwarehouse.as1.model.Clicker;
 import net.depotwarehouse.as1.model.File;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;

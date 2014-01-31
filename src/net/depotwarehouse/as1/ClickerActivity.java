@@ -12,13 +12,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import net.depotwarehouse.as1.controller.ClickerController;
 import net.depotwarehouse.as1.controller.LogController;
-import net.depotwarehouse.as1.model.Clicker;
 import net.depotwarehouse.as1.model.File;
-
+/**
+ * The primary activity of the application. This activity has two primary tasks:
+ *  1) Allow the user to navigate between and increment existing clickers
+ *  2) Serve as a landing page so that the user can explore the application further using the menu.
+ * @author tpavlek
+ *
+ */
 public class ClickerActivity extends Activity {
 	
-	public static ClickerController clickerController;
-	public static LogController logController;
+	// our controllers
+	private ClickerController clickerController;
+	private LogController logController;
+	
+	// our widgets
 	private TextView counterName;
 	private TextView count;
 	private Button incButton;
@@ -30,14 +38,7 @@ public class ClickerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_clicker);
 		
-		// We instantiate logController here, because logs will never change, except in this activity.
-		String loadedData = "";
-		try {
-			loadedData = File.readString(openFileInput("log.json"));
-		} catch (IOException e) {
-			System.err.println("Error loading log file");
-		}
-		logController = new LogController(loadedData);
+		
 		
 		// instantiation of active view items
 		counterName = (TextView) findViewById(R.id.counter_name);
@@ -55,7 +56,7 @@ public class ClickerActivity extends Activity {
 	}
 	
 	/**
-	 * OnResume we will completely reload the controller from disk.
+	 * OnResume we will completely reload the controllers from disk.
 	 * This helps in the case where we just came from the newclicker activity,
 	 * and added a new clicker serialized to disk.
 	 */
@@ -63,12 +64,21 @@ public class ClickerActivity extends Activity {
 		super.onResume();
 		String loadedData = "";
 		try {
+			loadedData = File.readString(openFileInput("log.json"));
+		} catch (IOException e) {
+			System.err.println("Error loading log file");
+		}
+		logController = new LogController(loadedData);
+		
+		loadedData = "";
+		try {
 			loadedData = File.readString(openFileInput("clickers.json"));
 		} catch (IOException e) {
-			System.err.println("error loading from file");
+			System.err.println("error loading clickers file");
 		}
 		clickerController = new ClickerController(loadedData);
 		
+		// insantiate the views.
 		refreshClicker();
 	}
 	
@@ -77,10 +87,12 @@ public class ClickerActivity extends Activity {
 	 * Must be called after clickercontroller is initialized.
 	 */
 	public void refreshClicker() {
+		// There is at least one clicker in the controller, we want to render it onscreen.
 		if (clickerController.any()) {
 			counterName.setText(clickerController.current().getName());
 			count.setText(String.valueOf(clickerController.current().getCount()));
 			incButton.setEnabled(true);
+		// otherwise, we need a placeholder text and disable the buttons.
 		} else {
 			counterName.setText("No Counters");
 			count.setText("");
@@ -91,10 +103,11 @@ public class ClickerActivity extends Activity {
 		nextButton.setEnabled(clickerController.hasNext());
 		prevButton.setEnabled(clickerController.hasPrevious());
 	}
-
+	
 	public void increment() {
 		/* if we don't have anything in the clickercontroller, attempting to increment would be
-		 * at best wasteful, and at worst, application-breaking
+		 * at best wasteful, and at worst, application-breaking. The button _should_ be disabled anyway
+		 * but I'm not going to be making assumptions about the client's implementation of android's widgets.
 		 */
 		if (clickerController.any()) {
 			clickerController.current().increment();
@@ -106,10 +119,12 @@ public class ClickerActivity extends Activity {
 			} catch (FileNotFoundException e) {
 				System.err.println("error writing file - clicker not saved");
 			}
+			// refresh the view, our clicker has changed.
 			refreshClicker();
 		}
 	}
 	
+	// bound to the next button on screen. View the next clicker in the controller
 	public void next(View v) {
 		try {
 			clickerController.next();
@@ -119,6 +134,7 @@ public class ClickerActivity extends Activity {
 		}
 	}
 	
+	// bound to the previous button on screen. View the previous clicker in the controller
 	public void prev(View v) {
 		try {
 			clickerController.prev();
@@ -146,6 +162,7 @@ public class ClickerActivity extends Activity {
 	            return true;
 	        case R.id.edit_counter:
 	        	intent = new Intent(this, EditClickerActivity.class);
+	        	// We'll need to know which counter to edit
 	        	intent.putExtra("id", clickerController.current().getId());
 	        	startActivity(intent);
 	        case R.id.list_counters:

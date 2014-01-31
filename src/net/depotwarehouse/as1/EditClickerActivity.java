@@ -2,9 +2,7 @@ package net.depotwarehouse.as1;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import net.depotwarehouse.as1.controller.ClickerController;
-import net.depotwarehouse.as1.model.Clicker;
 import net.depotwarehouse.as1.model.File;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,17 +10,31 @@ import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * This activity allows the user to edit a clicker.
+ * 
+ * The options available to the user are changing a clicker's name, zeroing a clicker, or deleting a clicker.
+ * 
+ * Note, all these activites are exclusive from each other, zeroing a clicker or deleting a clicker will end the
+ * activity, as will saving an edit. If a user wants to edit a clicker's name, then zero it, he will need to call
+ * the activity twice (though why wouldn't he just delete it and make a new one?)
+ * 
+ * parent of this activity is the main one, clicking in the upper left will bring the user there
+ * @author tpavlek
+ *
+ */
 public class EditClickerActivity extends Activity {
+	// controllers
+	private ClickerController clickerController;
 	
+	// widgets
 	private EditText clickerName;
 	private TextView clickerCount;
-	private Button saveButton;
-	private Button deleteButton;
-	private ClickerController clickerController;
+	
+	// id of clicker we're editing
 	private String id;
 
 	@Override
@@ -34,6 +46,7 @@ public class EditClickerActivity extends Activity {
 		clickerName = (EditText) findViewById(R.id.clicker_name);
 		clickerCount = (TextView) findViewById(R.id.clicker_count);
 		
+		// We need to get the id of the clicker that the user wants to edit.
 		Intent intent = getIntent();
 		id = intent.getStringExtra("id");
 	}
@@ -41,6 +54,8 @@ public class EditClickerActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		// load our data and then put it in the controller.
 		String loadedData = "";
 		try {
 			loadedData = File.readString(openFileInput("clickers.json"));
@@ -57,6 +72,7 @@ public class EditClickerActivity extends Activity {
 			finish();
 		}
 		
+		// Set the values of the widgets to represent the clicker data
 		clickerName.setText(clickerController.current().getName());
 		clickerCount.setText(String.valueOf(clickerController.current().getCount()));
 	}
@@ -68,24 +84,30 @@ public class EditClickerActivity extends Activity {
 		return true;
 	}
 	
+	// zero the counter and save to disk.
 	public void zero(View v) {
 		clickerController.current().setCount(0);
 		save();
 	}
 	
+	// rename the counter and save to disk
 	public void rename(View v) {
 		clickerController.current().setName(clickerName.getText().toString());
 		save();
 	}
 	
+	// delete the counter and save to disk
 	public void delete(View v) {
+		// TODO remove associated logs
 		clickerController.remove();
 		save();
 	}
 	
+	// save to disk
 	public void save() {
 		try {
 			File.writeString(openFileOutput("clickers.json", MODE_PRIVATE), clickerController.toJSON());
+			// todo save log
 		} catch (FileNotFoundException e) {
 			System.err.println("Could not save clicker edits/removals " + e);
 		}
@@ -93,9 +115,7 @@ public class EditClickerActivity extends Activity {
 	}
 	
 	private void setupActionBar() {
-
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
 	}
 	
 
