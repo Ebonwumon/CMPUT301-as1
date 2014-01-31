@@ -25,7 +25,7 @@ The main screen, on first launch should have no clickers and you shouldn't be ab
   * If you have more than one counter you can use the previous/next buttons to switch your view to those other counters
  
   
-Some notes: There is no data-validation done on the JSON. If the user manually enters the filesystem and edits the stored JSON files, there will be breakage/crashes. Don't do that.
+Some notes: There is no data-validation done on the JSON. If the user manually enters the filesystem and edits the stored JSON files, there will be breakage/crashes. Don't do that. Also note, if you zero a counter, the logs will persist. This is intentional behaviour because just because you reset a counter doesn't mean the statistics of when you incremented it aren't valuable
 
 ##Class Responsibilities##
 
